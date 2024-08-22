@@ -26,7 +26,11 @@ const CadastroEndereco = () => {
     setValue,
     watch,
     formState: { errors },
-  } = useForm<FormInputEndereco>();
+  } = useForm<FormInputEndereco>({
+    mode: "all",
+    defaultValues: { cep: "", rua: "", bairro: "", localidade: "", numero: "" },
+  });
+  //{ mode: "all" } modo de revalidação de campos quando o campo perder o foco
 
   const aoSubmeter = (dados: FormInputEndereco) => {
     console.log(dados);
@@ -65,7 +69,7 @@ const CadastroEndereco = () => {
             id="campo-cep"
             placeholder="Insira seu CEP"
             type="text"
-            {...register("cep")}
+            {...register("cep", { required: "O capo é obrigatório" })}
             $error={!!errors.cep}
             onBlur={() => fetchEndereco(cepDigitado)}
           />
@@ -77,7 +81,7 @@ const CadastroEndereco = () => {
             id="campo-rua"
             placeholder="Rua Agarikov"
             type="text"
-            {...register("rua")}
+            {...register("rua", { required: "O capo é obrigatório" })}
             $error={!!errors.rua}
           />
           {errors.rua && <ErrorMessage>{errors.rua.message}</ErrorMessage>}
@@ -90,7 +94,7 @@ const CadastroEndereco = () => {
               id="campo-numero-rua"
               placeholder="Ex: 1440"
               type="text"
-              {...register("numero")}
+              {...register("numero", { required: "O capo é obrigatório" })}
               $error={!!errors.numero}
             />
             {errors.numero && (
@@ -103,7 +107,7 @@ const CadastroEndereco = () => {
               id="campo-bairro"
               placeholder="Vila Mariana"
               type="text"
-              {...register("bairro")}
+              {...register("bairro", { required: "O capo é obrigatório" })}
               $error={!!errors.bairro}
             />
             {errors.bairro && (
@@ -117,7 +121,7 @@ const CadastroEndereco = () => {
             id="campo-localidade"
             placeholder="São Paulo, SP"
             type="text"
-            {...register("localidade")}
+            {...register("localidade", { required: "O capo é obrigatório" })}
             $error={!!errors.localidade}
           />
           {errors.localidade && (
