@@ -5,8 +5,8 @@ export default function Cadastro() {
   return (
     <>
       <Logotipo />
-      {/* <CadastroPessoal /> */}
-      <CadastroEndereco />
+      <CadastroPessoal />
+      {/* <CadastroEndereco /> */}
     </>
   );
 }

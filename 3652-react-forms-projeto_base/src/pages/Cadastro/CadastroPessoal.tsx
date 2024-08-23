@@ -7,7 +7,9 @@ import {
   Titulo,
   ErrorMessage,
 } from "../../components";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import InputMask from "../../components/InputMask/Index";
+import { useEffect } from "react";
 
 interface FormImputTipos {
   nome: string;
@@ -21,9 +23,24 @@ const CadastroPessoal = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
     watch,
-  } = useForm<FormImputTipos>();
+    control,
+    reset,
+  } = useForm<FormImputTipos>({
+    mode: "all",
+    defaultValues: {
+      nome: "",
+      email: "",
+      telefone: "",
+      senha: "",
+      senhaVerificada: "",
+    },
+  });
+
+  useEffect(() => {
+    reset();
+  }, [reset, isSubmitSuccessful]);
 
   const aoSubmeter = (dados: FormImputTipos) => {
     console.log(dados);
@@ -82,26 +99,30 @@ const CadastroPessoal = () => {
           />
           {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
         </Fieldset>
-
-        <Fieldset>
-          <Label>Telefone</Label>
-          <Input
-            id="campo-telefone"
-            type="text"
-            placeholder="Ex: (DDD) XXXXX-XXXX"
-            {...register("telefone", {
-              pattern: {
-                value: /^\(\d{2,3}\) \d{5}-\d{4}$/,
-                message: "O telefone foi informado de maneira incorreta.",
-              },
-            })}
-          />
-          {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
-
-          {errors.telefone && (
-            <ErrorMessage>{errors.telefone.message}</ErrorMessage>
+        <Controller
+          control={control}
+          name="telefone"
+          rules={{
+            pattern: {
+              value: /^\(\d{2,3}\) \d{5}-\d{4}$/,
+              message: "O telefone foi informado de maneira incorreta.",
+            },
+          }}
+          render={({ field }) => (
+            <Fieldset>
+              <Label>Telefone</Label>
+              <InputMask
+                mask="(99) 99999-9999"
+                placeholder="Ex: (DDD) XXXXX-XXXX"
+                $error={!!errors.telefone}
+                onChange={field.onChange}
+              />
+              {errors.telefone && (
+                <ErrorMessage>{errors.telefone.message}</ErrorMessage>
+              )}
+            </Fieldset>
           )}
-        </Fieldset>
+        />
 
         <Fieldset>
           <Label htmlFor="campo-senha">Crie uma senha</Label>
@@ -141,14 +162,3 @@ const CadastroPessoal = () => {
 };
 
 export default CadastroPessoal;
-
-// const [nome, setNome] = useState("");
-// const [email, setEmail] = useState("");
-// const [telefone, setTelefone] = useState("");
-// const [senha, setSenha] = useState("");
-// const [senhaVerificada, setSenhaVerificada] = useState("");
-
-// const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-//   event.preventDefault();
-//   console.log({ nome, email, senha, telefone, senhaVerificada });
-// };
